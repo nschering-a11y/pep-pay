@@ -37,7 +37,7 @@ const translations = {
     address: "收款地址",
     amount: "金额",
     description: "说明",
-    copyAddress: "复制金额",
+    copyAddress: "复制地址",
     copyAmount: "复制金额",
     copied: "已复制",
     invalid: "请检查收款地址和金额。",
