@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PEP Pay Widget – Demo</title>
+  <style>
+    body { margin: 0; padding: 48px 20px; background: #f3f5f3; color: #17221b;
+      font: 16px/1.5 system-ui, sans-serif; }
+    main { max-width: 760px; margin: auto; }
+    h1 { margin-bottom: 8px; }
+    .intro { color: #526157; margin-bottom: 28px; }
+  </style>
+  <script type="module" src="/src/pep-pay.js"></script>
+</head>
+<body>
+  <main>
+    <h1>PEP Pay</h1>
+    <p class="intro">A self-hosted, non-custodial Pepecoin payment request widget.</p>
+
+    <div class="pep-pay"
+      data-address="YOUR_PEP_RECEIVING_ADDRESS"
+      data-amount="1000"
+      data-currency="PEP"
+      data-description="Beispielwerk"
+      data-language="de"
+      data-theme="light">
+    </div>
+  </main>
+</body>
+</html>
