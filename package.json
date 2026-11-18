@@ -1,0 +1,18 @@
+{
+  "name": "pep-pay",
+  "version": "0.2.0",
+  "private": false,
+  "description": "Self-hosted, non-custodial Pepecoin (PEP) payment request widget",
+  "type": "module",
+  "scripts": {
+    "build": "esbuild src/pep-pay.js --bundle --minify --format=iife --target=es2018 --outfile=dist/pep-pay.js",
+    "dev": "vite --host 0.0.0.0"
+  },
+  "dependencies": {
+    "qrcode": "^1.5.4"
+  },
+  "devDependencies": {
+    "esbuild": "^0.24.2",
+    "vite": "^6.0.0"
+  }
+}
