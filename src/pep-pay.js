@@ -198,8 +198,7 @@ async function renderWidget(el) {
   el.replaceChildren(card);
 
   try {
-    // Coinomi amount-prefill scanning was tested by the maintainer.
-    // Compatibility with other wallets has not yet been verified.
+    // Payment URI amount-prefill is experimental; wallet support has not been confirmed.
     const paymentURI = `pepecoin:${address}?amount=${amount}`;
     await QRCode.toCanvas(canvas, paymentURI, {
       width: 220,
