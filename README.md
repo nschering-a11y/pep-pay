@@ -23,7 +23,7 @@ PEP Pay displays a receiving address, a fixed PEP amount and a QR code that enco
 
 - PEP Pay does not send, receive, hold or custody coins.
 - It does not verify transactions or show payment confirmations. The seller must check the receiving wallet independently.
-- The amount-prefilled URI (`pepecoin:ADDRESS?amount=AMOUNT`) was tested by the project maintainer with Coinomi. Compatibility with other wallets has not been verified. Always check the address and amount in the wallet before confirming a transaction.
+- The QR code currently encodes an amount-bearing URI (`pepecoin:ADDRESS?amount=AMOUNT`), but automatic amount-prefill has not been confirmed in Coinomi or other wallets. Always check and, if necessary, enter the amount manually in your wallet before confirming a transaction.
 - PEP Pay does not calculate prices, taxes/VAT, invoices, shipping, stock or legal obligations. Sellers remain responsible for these matters.
 - Use only native Pepecoin (PEP), not similarly named tokens.
 
@@ -53,7 +53,7 @@ Open the local Vite URL shown in the terminal.
 
 1. Build the project.
 2. Upload `dist/pep-pay.js` to your own website, for example to `/assets/pep-pay.js`.
-3. Add the following markup where the payment request should appear. Replace the example address with your own Pepecoin receiving address and set the amount.
+3. Add the following markup where the payment request should appear. Replace the example address with your own Pepecoin receiving address and set the amount. The script path below assumes you uploaded the built `pep-pay.js` file to the website root.
 
 ```html
 <div
@@ -65,7 +65,7 @@ Open the local Vite URL shown in the terminal.
   data-language="en">
 </div>
 
-<script src="/assets/pep-pay.js" defer></script>
+<script src="/pep-pay.js" defer></script>
 ```
 
 Language values:
