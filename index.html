@@ -9,7 +9,10 @@
       font: 16px/1.5 system-ui, sans-serif; }
     main { max-width: 760px; margin: auto; }
     h1 { margin-bottom: 8px; }
-    .intro { color: #526157; margin-bottom: 28px; }
+    .intro { color: #526157; margin-bottom: 22px; }
+    .language-control { display:flex; align-items:center; gap:10px; margin:0 0 18px; }
+    .language-control label { font-size:14px; font-weight:600; }
+    .language-control select { padding:8px 10px; border:1px solid #cbd5ce; border-radius:8px; background:#fff; font:inherit; }
   </style>
   <script src="./pep-pay.js" defer></script>
 </head>
@@ -17,6 +20,15 @@
   <main>
     <h1>PEP Pay</h1>
     <p class="intro">A self-hosted, non-custodial Pepecoin payment request widget.</p>
+
+    <div class="language-control">
+      <label for="demo-language">Sprache / Language / 语言</label>
+      <select id="demo-language">
+        <option value="de" selected>Deutsch</option>
+        <option value="en">English</option>
+        <option value="zh">中文</option>
+      </select>
+    </div>
 
     <div class="pep-pay"
       data-demo="true"
@@ -28,5 +40,14 @@
       data-theme="light">
     </div>
   </main>
+  <script>
+    const languageSelect = document.getElementById("demo-language");
+    const widget = document.querySelector(".pep-pay");
+    languageSelect.addEventListener("change", () => {
+      widget.dataset.language = languageSelect.value;
+      delete widget.dataset.pepPayReady;
+      window.PepPay.init();
+    });
+  </script>
 </body>
 </html>
