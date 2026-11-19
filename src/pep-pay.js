@@ -72,6 +72,9 @@ function addStyles() {
     .pep-pay-note{font-size:12px;color:#53645a;margin:12px 0 0}
     .pep-pay-warning{font-size:11px;color:#79552a;background:#fff7e8;padding:9px 10px;border-radius:8px;margin-top:12px}
     .pep-pay-error{color:#a32929;background:#fff0f0;padding:10px;border-radius:8px}
+    .pep-pay-demo{border:2px solid #b42318;background:#fff7f6;color:#7a271a;padding:16px;border-radius:12px}
+    .pep-pay-demo strong{display:block;font-size:16px;margin-bottom:6px}
+    .pep-pay-demo p{margin:6px 0;font-size:13px}
   `;
   document.head.appendChild(style);
 }
@@ -109,6 +112,22 @@ async function renderWidget(el) {
   const lang = translations[el.dataset.language] ? el.dataset.language : "en";
   const t = translations[lang];
   const numericAmount = Number(amount);
+
+  if (el.dataset.demo === "true") {
+    const demo = document.createElement("section");
+    demo.className = "pep-pay-card pep-pay-demo";
+    const heading = document.createElement("strong");
+    heading.textContent = "DEMO – KEINE ZAHLUNG SENDEN";
+    const message = document.createElement("p");
+    message.textContent = "Dies ist nur eine Vorschau. Es wird keine echte Empfangsadresse und kein zahlbarer QR-Code angezeigt.";
+    const fakeAddress = document.createElement("p");
+    fakeAddress.textContent = "Testadresse: NICHT VERWENDBAR";
+    const demoAmount = document.createElement("p");
+    demoAmount.textContent = `Beispielbetrag: ${amount || "1000"} PEP`;
+    demo.append(heading, message, fakeAddress, demoAmount);
+    el.replaceChildren(demo);
+    return;
+  }
 
   if (!address || address === "YOUR_PEP_RECEIVING_ADDRESS" ||
       !Number.isFinite(numericAmount) || numericAmount <= 0) {
