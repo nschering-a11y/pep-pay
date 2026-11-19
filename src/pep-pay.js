@@ -113,41 +113,30 @@ async function renderWidget(el) {
   const t = translations[lang];
   const numericAmount = Number(amount);
 
-  if (el.dataset.demo === "true") {
-    const demoCopy = {
-      de: {
-        heading: "DEMO – KEINE ZAHLUNG SENDEN",
-        message: "Dies ist nur eine Vorschau. Es wird keine echte Empfangsadresse und kein zahlbarer QR-Code angezeigt.",
-        address: "Testadresse: NICHT VERWENDBAR",
-        amount: "Beispielbetrag"
-      },
-      en: {
-        heading: "DEMO – DO NOT SEND PAYMENT",
-        message: "Preview only. No real receiving address or payable QR code is displayed.",
-        address: "Test address: NOT USABLE",
-        amount: "Example amount"
-      },
-      zh: {
-        heading: "演示 – 请勿付款",
-        message: "这只是预览，不会显示真实收款地址或可用于付款的二维码。",
-        address: "测试地址：不可使用",
-        amount: "示例金额"
-      }
-    }[lang];
-    const demo = document.createElement("section");
-    demo.className = "pep-pay-card pep-pay-demo";
-    const heading = document.createElement("strong");
-    heading.textContent = demoCopy.heading;
-    const message = document.createElement("p");
-    message.textContent = demoCopy.message;
-    const fakeAddress = document.createElement("p");
-    fakeAddress.textContent = demoCopy.address;
-    const demoAmount = document.createElement("p");
-    demoAmount.textContent = `${demoCopy.amount}: ${amount || "1000"} PEP`;
-    demo.append(heading, message, fakeAddress, demoAmount);
-    el.replaceChildren(demo);
-    return;
-  }
+  const isDemo = el.dataset.demo === "true";
+  const demoCopy = {
+    de: {
+      heading: "DEMO – KEINE ZAHLUNG SENDEN",
+      message: "Nur eine Funktionsvorschau. Die angezeigte Testadresse ist ungültig und kann keine Zahlung empfangen.",
+      address: "Ungültige Demo-Adresse",
+      amount: "Beispielbetrag",
+      badge: "NICHT ZAHLBAR"
+    },
+    en: {
+      heading: "DEMO – DO NOT SEND PAYMENT",
+      message: "Feature preview only. The test address shown is invalid and cannot receive a payment.",
+      address: "Invalid demo address",
+      amount: "Example amount",
+      badge: "NOT PAYABLE"
+    },
+    zh: {
+      heading: "演示 – 请勿付款",
+      message: "仅用于功能预览。此处显示的测试地址无效，无法接收付款。",
+      address: "无效演示地址",
+      amount: "示例金额",
+      badge: "不可付款"
+    }
+  }[lang];
 
   if (!address || address === "YOUR_PEP_RECEIVING_ADDRESS" ||
       !Number.isFinite(numericAmount) || numericAmount <= 0) {
@@ -166,12 +155,27 @@ async function renderWidget(el) {
   brand.textContent = "PEP PAY";
   const free = document.createElement("span");
   free.className = "pep-pay-free";
-  free.textContent = "FREE";
+  free.textContent = isDemo ? demoCopy.badge : "FREE";
+  if (isDemo) {
+    free.style.color = "#8b1e16";
+    free.style.background = "#fde8e7";
+  }
   head.append(brand, free);
 
   const title = document.createElement("h2");
   title.className = "pep-pay-title";
   title.textContent = t.title;
+
+  if (isDemo) {
+    const demoNotice = document.createElement("div");
+    demoNotice.className = "pep-pay-demo";
+    const demoHeading = document.createElement("strong");
+    demoHeading.textContent = demoCopy.heading;
+    const demoMessage = document.createElement("p");
+    demoMessage.textContent = demoCopy.message;
+    demoNotice.append(demoHeading, demoMessage);
+    card.append(demoNotice);
+  }
 
   const scan = document.createElement("p");
   scan.className = "pep-pay-note";
@@ -194,7 +198,8 @@ async function renderWidget(el) {
   addressLabel.textContent = t.address;
   const addressValue = document.createElement("div");
   addressValue.className = "pep-pay-value";
-  addressValue.textContent = address;
+  addressValue.textContent = isDemo ? "NOT-A-REAL-PEP-ADDRESS" : address;
+  if (isDemo) addressLabel.textContent = demoCopy.address;
 
   const actions = document.createElement("div");
   actions.className = "pep-pay-actions";
@@ -202,7 +207,7 @@ async function renderWidget(el) {
   copyAddress.type = "button";
   copyAddress.className = "pep-pay-button";
   copyAddress.textContent = t.copyAddress;
-  copyAddress.addEventListener("click", () => copyText(address, copyAddress, t.copied));
+  copyAddress.addEventListener("click", () => copyText(isDemo ? "NOT-A-REAL-PEP-ADDRESS" : address, copyAddress, t.copied));
 
   const copyAmount = document.createElement("button");
   copyAmount.type = "button";
@@ -226,7 +231,7 @@ async function renderWidget(el) {
 
   const amountNote = document.createElement("p");
   amountNote.className = "pep-pay-note";
-  amountNote.textContent = t.amountNote;
+  amountNote.textContent = isDemo ? demoCopy.message : t.amountNote;
   const availability = document.createElement("p");
   availability.className = "pep-pay-warning";
   availability.textContent = t.availability;
@@ -238,7 +243,9 @@ async function renderWidget(el) {
 
   try {
     // Payment URI amount-prefill is experimental; wallet support has not been confirmed.
-    const paymentURI = `pepecoin:${address}?amount=${amount}`;
+    // Demo QR deliberately contains an invalid placeholder address and cannot receive funds.
+    const qrAddress = isDemo ? "NOT-A-REAL-PEP-ADDRESS" : address;
+    const paymentURI = `pepecoin:${qrAddress}?amount=${amount}`;
     await QRCode.toCanvas(canvas, paymentURI, {
       width: 220,
       margin: 1,
