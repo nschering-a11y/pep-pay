@@ -114,16 +114,36 @@ async function renderWidget(el) {
   const numericAmount = Number(amount);
 
   if (el.dataset.demo === "true") {
+    const demoCopy = {
+      de: {
+        heading: "DEMO – KEINE ZAHLUNG SENDEN",
+        message: "Dies ist nur eine Vorschau. Es wird keine echte Empfangsadresse und kein zahlbarer QR-Code angezeigt.",
+        address: "Testadresse: NICHT VERWENDBAR",
+        amount: "Beispielbetrag"
+      },
+      en: {
+        heading: "DEMO – DO NOT SEND PAYMENT",
+        message: "Preview only. No real receiving address or payable QR code is displayed.",
+        address: "Test address: NOT USABLE",
+        amount: "Example amount"
+      },
+      zh: {
+        heading: "演示 – 请勿付款",
+        message: "这只是预览，不会显示真实收款地址或可用于付款的二维码。",
+        address: "测试地址：不可使用",
+        amount: "示例金额"
+      }
+    }[lang];
     const demo = document.createElement("section");
     demo.className = "pep-pay-card pep-pay-demo";
     const heading = document.createElement("strong");
-    heading.textContent = "DEMO – KEINE ZAHLUNG SENDEN";
+    heading.textContent = demoCopy.heading;
     const message = document.createElement("p");
-    message.textContent = "Dies ist nur eine Vorschau. Es wird keine echte Empfangsadresse und kein zahlbarer QR-Code angezeigt.";
+    message.textContent = demoCopy.message;
     const fakeAddress = document.createElement("p");
-    fakeAddress.textContent = "Testadresse: NICHT VERWENDBAR";
+    fakeAddress.textContent = demoCopy.address;
     const demoAmount = document.createElement("p");
-    demoAmount.textContent = `Beispielbetrag: ${amount || "1000"} PEP`;
+    demoAmount.textContent = `${demoCopy.amount}: ${amount || "1000"} PEP`;
     demo.append(heading, message, fakeAddress, demoAmount);
     el.replaceChildren(demo);
     return;
